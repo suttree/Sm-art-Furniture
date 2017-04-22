@@ -1,0 +1,49 @@
+<!--
+Start middle bottom
+
+Fade away any trails slowly
+Pick a direction
+Move randomly in that direction
+Repeat
+
+-->
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="mycanvas">
+float xoff = 0.0;
+float xincrement = 0.01; 
+float yoff = 0.0;
+float yincrement = 0.01; 
+
+float prevX;
+float prevY;
+
+void setup() {
+  size(640, 360);
+  background(102);
+  noStroke();
+  smooth();
+
+  prevX = width/2;
+  prevY = height;
+}
+
+void draw() {
+  stroke(0);
+  fill(255, 10); // semi-transparent white
+  rect(0, 0, width, height);
+
+//console.log(prevX);
+  float x = noise(xoff, yoff)*width;
+  float y = noise(xoff, yoff)*height;
+  xoff += xincrement;
+  yoff += yincrement;
+
+  line(x, y, prevX, prevY);
+
+  prevX = x;
+  prevY = y;
+
+}
+</script>
+
+<canvas id="mycanvas"></canvas>
