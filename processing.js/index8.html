@@ -1,0 +1,21 @@
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="mycanvas">
+void setup() {
+  size(640, 360);
+  background(102);
+  noStroke();
+  smooth();
+}
+
+void draw() {
+  stroke(0);
+  fill(255, 10); // semi-transparent white
+  rect(0, 0, width, height);
+
+  if (mousePressed == true) {
+    line(mouseX, mouseY, pmouseX, pmouseY);
+  }
+}
+</script>
+
+<canvas id="mycanvas"></canvas>

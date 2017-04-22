@@ -1,0 +1,35 @@
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="mycanvas">
+float xoff = 0.0;
+float xincrement = 0.01; 
+
+float prevX;
+float prevY;
+
+void setup() {
+  size(640, 360);
+  background(102);
+  noStroke();
+  smooth();
+}
+
+void draw() {
+  stroke(0);
+  fill(255, 10); // semi-transparent white
+  rect(0, 0, width, height);
+
+  float x = noise(xoff)*width;
+  float y = noise(xoff)*height;
+  xoff += xincrement;
+
+  prevX = x;
+  prevY = y;
+
+  float n = x;
+  line(n, height/2, prevX, prevY);
+  //ellipse(x,y,1,1);
+  //line(x, y, prevX, prevY);
+}
+</script>
+
+<canvas id="mycanvas"></canvas>
