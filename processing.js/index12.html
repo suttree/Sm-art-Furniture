@@ -1,0 +1,77 @@
+<!--
+
+Start middle 
+set prevX and prevY
+
+Choose direction via Perlin
+Choose length via Perlin
+Draw line from prevX and prevY to new X and Y
+
+Repeat w/ fade etc
+
+-->
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="sf">
+float xoff = 0.0;
+float xincrement = 0.01; 
+
+float yoff = 0.0;
+float yincrement = 0.01; 
+
+int prevX;
+int prevY;
+
+void setup() {
+	size(window.innerWidth * 0.98, window.innerHeight * 0.98); 
+  background(102);
+  noStroke();
+
+  prevX = width / 2;
+  prevY = height / 2;
+}
+
+void draw() {
+  //stroke(255, 10);
+  stroke(0);
+  //fill(255, 10);
+  //rect(0, 0, width, height);
+
+  float x;
+  float y;
+
+  int length;
+  int direction = noise(xoff, yoff);
+
+  if (direction < 0.25) {
+    // north
+    x = noise(xoff) * width;
+    y = prevY;
+  } else if (direction < 0.5) {
+    // south
+    x = noise(xoff) * width;
+    y = prevY;
+  } else if (direction < 0.75) {
+    // east 
+    x = prevX;
+    y = noise(yoff) * height;
+  } else {
+    // west
+    x = prevX;
+    y = noise(yoff) * height;
+  }
+
+  x = constrain(x, 0, width);
+  y = constrain(y, 0, height);
+
+  line(prevX, prevY, x, y);
+  // or curve
+
+  prevX = x;
+  prevY = y;
+
+  xoff += xincrement;
+  yoff += yincrement;
+}
+</script>
+
+<canvas id="sf"></canvas>
