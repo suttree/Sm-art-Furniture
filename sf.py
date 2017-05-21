@@ -12,7 +12,10 @@ def main(argv):
     sf = smartFurniture(os.path.dirname(full_path) + '/' + 'sf.pid')
     sf.start()
 
-# Mostly taken from https://github.com/serverdensity/sd-agent/blob/master/agent.py
+# Mostly taken from:
+#   https://github.com/serverdensity/sd-agent/blob/master/agent.py
+#   https://github.com/serverdensity/python-daemon
+#   https://dpbl.wordpress.com/2017/02/12/a-tutorial-on-python-daemon/
 class smartFurniture(Daemon):
     """
     This class manages the overall hardware process
