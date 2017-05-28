@@ -1,10 +1,12 @@
 from daemon import Daemon
 
 import os, sys, getopt, time
+import webbrowser
 import datetime
 import logging
 import random
 import signal
+import noise
 
 # Setup logging
 log = logging.getLogger(__name__)
@@ -25,7 +27,8 @@ log.addHandler(handler)
 full_path = os.path.realpath(__file__)
 PID_FILE = os.path.dirname(full_path) + '/pid/' + 'sf.pid'
 
-# dim the screen after 10pm, and vie versa
+# for screen dimming
+dimmer = 1
 
 def usage():
     print "sf.py -h (help) -d (debug) -s (startup)"
@@ -49,37 +52,50 @@ class smartFurniture(Daemon):
         self.run_forever = True
 
     def run(self):
-        # Run the main loop.
+	i = 0.0
+	launch_processing(True)
+
+        # Run the main loop
         while self.run_forever:
-	    # Schedule periodic processing changes
-	    # TODO use perlin noise on the interval
-	    dim_screen()
-	    launch_processing()
-	    time.sleep(5)
+	    if (random.randint(0,9) > 8):
+		dim_screen()
+		launch_processing()
+		p = int(noise.pnoise1(i) * 100)
+		try:
+		    time.sleep(p)
+		except IOError:
+		    pass
+	    i += 0.1
 
         print "This is an exit"
         sys.exit(0)
 
 def dim_screen():
+    global dimmer
     hour = datetime.datetime.now().hour
-    log.info("Hour: %d", hour)
+    log.info("Hour: %d, Dimmer: %f", hour, dimmer)
     if hour >= 20 or hour <= 6:
-	if hour > 20:
+	if hour >= 20:
 	    # dim screen
-	    bvar -= 0.1
-	elif hour < 6:
+	    dimmer -= 0.01
+	elif hour <= 6:
 	    # wake up
-	    bvar += 0.1
+	    dimmer += 0.01
 
-	os.system("bin/brightness %d", bvar)
+	if dimmer > 0.0:
+	    os.system("bin/brightness {}".format(dimmer))
 
 # Launch p5, select a script and suply with random args?
-def launch_processing():
-    log.info("hey")
+def launch_processing(startup = False):
     # From https://stackoverflow.com/questions/12211781/how-to-maximize-window-in-chrome-using-webdriver-python
     #ChromeOptions chromeOptions = new ChromeOptions();
     #chromeOptions.addArguments("--kiosk");
     #driver = new ChromeDriver(chromeOptions);
+
+    if (random.randint(0,9) > 8) or startup:
+	page = random.choice(['index11.html', 'index12.html'])
+	log.info("Launching p5: %s", page)
+	webbrowser.open("http://0.0.0.0:8000/{}".format(page) , new = 0)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
