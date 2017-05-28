@@ -1,15 +1,40 @@
 from daemon import Daemon
 
 import os, sys, getopt
+import logging
 import random
 import signal
 
+# Setup logging
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+
+# create a file handler
+handler = logging.FileHandler('log/sf.log')
+handler.setLevel(logging.INFO)
+
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# add the handlers to the logger
+log.addHandler(handler)
+
+
+# Setup PID file
+full_path = os.path.realpath(__file__)
+PID_FILE = os.path.dirname(full_path) + '/pid/' + 'sf.pid'
+
+# wtf logging?
+# run a p5.js script every 30 minutes/rand
+# dim the screen after 10pm, and vie versa
+
 def usage():
-  print "sf.py -h (help) -d (debug) -s (startup)"
+    print "sf.py -h (help) -d (debug) -s (startup)"
 
 def main(argv):
     full_path = os.path.realpath(__file__)
-    sf = smartFurniture(os.path.dirname(full_path) + '/' + 'sf.pid')
+    sf = smartFurniture(PID_FILE)
     sf.start()
 
 # Mostly taken from:
@@ -28,11 +53,9 @@ class smartFurniture(Daemon):
     def _handle_sigterm(self, signum, frame):
         """Handles SIGTERM and SIGINT, which gracefully stops the agent."""
         log.debug("Caught sigterm. Stopping run loop.")
+	log.error('sigterm backtrace', exc_info=True)
         self.run_forever = False
-
-        if self.collector:
-            self.collector.stop()
-        log.debug("Collector is stopped.")
+	self._remove_pidfile()
 
     def _handle_sigusr1(self, signum, frame):
         """Handles SIGUSR1, which signals an exit with an autorestart."""
@@ -42,7 +65,14 @@ class smartFurniture(Daemon):
     def _handle_sighup(self, signum, frame):
         """Handles SIGHUP, which signals a configuration reload."""
         log.info("SIGHUP caught! Scheduling configuration reload before next collection run.")
-        self.reload_configs_flag = True
+	log.error('sighup backtrace', exc_info=True)
+	self._remove_pidfile()
+
+    def _do_restart(self):
+	log.info("on Restart.")
+
+    def _remove_pidfile(self):
+	os.remove(PID_FILE)
 
     def run(self):
         # Gracefully exit on sigterm.
@@ -59,10 +89,11 @@ class smartFurniture(Daemon):
 
         # Run the main loop.
         while self.run_forever:
-	    print "hey"
+            log.info("hey")
 
-	print "Exiting. Bye bye."
+        print "Exit, peace out"
+	self._remove_pidfile()
         sys.exit(0)
 
 if __name__ == "__main__":
-  main(sys.argv[1:])
+    main(sys.argv[1:])
