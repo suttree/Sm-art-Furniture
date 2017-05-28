@@ -73,8 +73,13 @@ def dim_screen():
 
 	os.system("bin/brightness %d", bvar)
 
+# Launch p5, select a script and suply with random args?
 def launch_processing():
     log.info("hey")
+    # From https://stackoverflow.com/questions/12211781/how-to-maximize-window-in-chrome-using-webdriver-python
+    #ChromeOptions chromeOptions = new ChromeOptions();
+    #chromeOptions.addArguments("--kiosk");
+    #driver = new ChromeDriver(chromeOptions);
 
 if __name__ == "__main__":
     main(sys.argv[1:])
