@@ -64,8 +64,8 @@ class smartFurniture(Daemon):
 		try:
 		    time.sleep(p)
 		except IOError:
-		    pass
-	    i += 0.1
+		    log.info("IOError for %F", p)
+	    i += 0.01
 
         print "This is an exit"
         sys.exit(0)
