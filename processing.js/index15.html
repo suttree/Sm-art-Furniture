@@ -16,19 +16,20 @@ void draw() {
     var b = map(second(), 0, 59, 255, 0);
     background(r, g, b, 75);
 
-		fill(r, g, b, 75);
+		fill(r, g, b, 15);
 		beginShape(); 
 
 		var xoff = 0;
-		for (var x = 0; x <= width; x += 40) {
+		for (var x = 0; x <= width; x += 12) {
+			//var xx = map(noise(xoff), 0, 1, 0, width);
 			var y = map(noise(xoff, yoff), 0, 1, 0, height);
 			vertex(x, y); 
 			xoff += 0.05;
 		}
 		yoff += 0.01;
 
-		vertex(width, height);
-		vertex(0, height);
+		vertex(width - 1000, -height);
+		//vertex(width/2, height);
 
 		endShape(CLOSE);
   }
