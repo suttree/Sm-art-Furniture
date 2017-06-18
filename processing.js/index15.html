@@ -1,0 +1,38 @@
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="sf">
+
+var yoff = 0.0;
+
+void setup() {
+  noStroke();
+	size(window.innerWidth * 0.98, window.innerHeight * 0.98); 
+  background(0, 5);
+}
+
+void draw() {
+  if (frameCount % 4 == 0) {
+    var r = map(hour(), 0, 23, 255, 0);
+    var g = map(minute(), 0, 59, 255, 0);
+    var b = map(second(), 0, 59, 255, 0);
+    background(r, g, b, 75);
+
+		fill(r, g, b, 75);
+		beginShape(); 
+
+		var xoff = 0;
+		for (var x = 0; x <= width; x += 40) {
+			var y = map(noise(xoff, yoff), 0, 1, 0, height);
+			vertex(x, y); 
+			xoff += 0.05;
+		}
+		yoff += 0.01;
+
+		vertex(width, height);
+		vertex(0, height);
+
+		endShape(CLOSE);
+  }
+}
+</script>
+
+<canvas id="sf"></canvas>
