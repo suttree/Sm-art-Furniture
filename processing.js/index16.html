@@ -1,0 +1,54 @@
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="sf">
+
+var yoff = 0.0;
+var trace = [];
+
+void setup() {
+  noStroke();
+	size(window.innerWidth * 0.98, window.innerHeight * 0.98); 
+}
+
+void draw() {
+  if (frameCount % 4 == 0) {
+    var r = map(hour(), 0, 23, 0, 255);
+    var g = map(minute(), 0, 59, 0, 255);
+    var b = map(second(), 0, 59, 0, 255);
+    background(r, g, b, 75);
+
+    fill(255); 
+    beginShape();
+    for (var i = 0; i < trace.length; i++) {
+      vertex(trace[i][0], trace[i][1]);
+    }
+    endShape();
+
+		fill(r, g, b, map(noise(yoff), 0, 1, 75, 100));
+		beginShape(); 
+
+		var xoff = 0.0;
+		var incr = map(noise(yoff), 0, 1, 8, 80);
+		var depth = map(noise(yoff), 0, 1, 200, 1000);
+		for (var x = 0; x <= width + 60; x += incr) {
+			var y = map(noise(xoff, yoff), 0, 1, -1, height + depth);
+			vertex(x, y); 
+
+      trace.push([x, y]);
+      if (trace.length > 100) {
+        trace.splice(0, 1);
+      }
+
+			xoff += 0.02;
+		}
+		yoff += 0.01;
+
+		vertex(width, height);
+		vertex(0, height);
+
+		endShape();
+
+  }
+}
+</script>
+
+<canvas id="sf"></canvas>
