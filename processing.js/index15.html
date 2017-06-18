@@ -11,25 +11,26 @@ void setup() {
 
 void draw() {
   if (frameCount % 4 == 0) {
-    var r = map(hour(), 0, 23, 255, 0);
-    var g = map(minute(), 0, 59, 255, 0);
-    var b = map(second(), 0, 59, 255, 0);
+    var r = map(hour(), 0, 23, 0, 255);
+    var g = map(minute(), 0, 59, 0, 255);
+    var b = map(second(), 0, 59, 0, 255);
     background(r, g, b, 75);
 
-		fill(r, g, b, 15);
+		fill(r, g, b, map(noise(yoff), 0, 1, 75, 100));
 		beginShape(); 
 
-		var xoff = 0;
-		for (var x = 0; x <= width; x += 12) {
-			//var xx = map(noise(xoff), 0, 1, 0, width);
-			var y = map(noise(xoff, yoff), 0, 1, 0, height);
+		var xoff = 0.0;
+		var incr = map(noise(yoff), 0, 1, 8, 80);
+		var depth = map(noise(yoff), 0, 1, 200, 1000);
+		for (var x = 0; x <= width + 60; x += incr) {
+			var y = map(noise(xoff, yoff), 0, 1, -1, height + depth);
 			vertex(x, y); 
-			xoff += 0.05;
+			xoff += 0.02;
 		}
 		yoff += 0.01;
 
-		vertex(width - 1000, -height);
-		//vertex(width/2, height);
+		vertex(width, height);
+		vertex(0, height);
 
 		endShape(CLOSE);
   }
