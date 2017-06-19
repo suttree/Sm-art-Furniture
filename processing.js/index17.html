@@ -1,0 +1,83 @@
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="sf">
+
+var yoff = 0.0;
+var trace = [];
+
+var num = 1000;
+var range = width * 0.25;
+
+var ax = [];
+var ay = [];
+float xincrement = 0.01; 
+
+
+void setup() {
+ 	noStroke();
+	size(window.innerWidth * 0.98, window.innerHeight * 0.98);
+
+	for ( var i = 0; i < num; i++ ) {
+		ax[i] = width / 2;
+		ay[i] = height / 2;
+  }
+}
+
+void draw() {
+  noStroke();
+  if (frameCount % 4 == 0) {
+    var r = map(hour(), 0, 23, 0, 255);
+    var g = map(minute(), 0, 59, 0, 255);
+    var b = map(second(), 0, 59, 0, 255);
+    background(r, g, b, 75);
+
+	fill(r, g, b, map(noise(yoff), 0, 1, 75, 100));
+	beginShape(); 
+
+	var xoff = 0.0;
+	var incr = map(noise(yoff), 0, 1, 8, 80);
+	var depth = map(noise(yoff), 0, 1, 200, 1000);
+	for (var x = 0; x <= width + 60; x += incr) {
+		var y = map(noise(xoff, yoff), 0, 1, -1, height + depth);
+		vertex(x, y); 
+
+		xoff += 0.02;
+	}
+	yoff += 0.01;
+
+	vertex(width, height);
+	vertex(0, height);
+
+	endShape();
+	
+	// Shift all elements 1 place to the left
+	for ( var i = 1; i < num; i++ ) {
+	  ax[i - 1] = ax[i];
+	  ay[i - 1] = ay[i];
+	}
+
+	// Put a new value at the end of the array
+	//ax[num - 1] += random(-range, range);
+	//ay[num - 1] += random(-range, range);
+	float x = noise(xoff);
+	float y = noise(xoff);
+	xoff += xincrement;
+
+	ax[num-1] += random(-range, range);
+	ay[num-1] += random(-range, range);
+
+	// Constrain all points to the screen
+	ax[num - 1] = constrain(ax[num - 1], 0, width);
+	ay[num - 1] = constrain(ay[num - 1], 0, height);
+
+	// Draw a line connecting the points
+	for ( var j = 1; j < num; j++ ) {
+	  //var val = j / num * 204.0 + 51;
+	  //stroke(val);
+		stroke(r, g, b);
+	  line(ax[j - 1], ay[j - 1], ax[j], ay[j]);
+	}
+  }
+}
+</script>
+
+<canvas id="sf"></canvas>
