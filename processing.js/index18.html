@@ -24,9 +24,9 @@ void draw() {
 
 	var maxy;
   if (frameCount % 4 == 0) {
-    var r = map(hour(), 0, 23, 0, 255);
-    var g = 255/2;
-    var b = 255/2;
+    var r = 255 - map(hour(), 0, 23, 0, 255); // darker at night, lighter during the day
+    var g = 255 - r;
+    var b = 255 - r;
     background(r, g, b, 75);
 
 		fill(r, g, b, map(noise(yoff), 0, 1, 75, 100));
@@ -43,9 +43,9 @@ void draw() {
 			if (y < maxy) {
 				maxy = y;
 			}
-			xoff += 0.02;
+			xoff += xincrement;
 		}
-		yoff += 0.01;
+		yoff += yincrement;
 
 		vertex(width, height);
 		vertex(0, height);
@@ -58,36 +58,16 @@ void draw() {
 		strokeWeight(4)
 	  stroke(random(r) ,random(b), random(g));
 
-	  int length;
-	  int direction = noise(xoff, yoff);
-
+    x = noise(xoff) * width;
 		if ((prevY + 50) < maxy) {
-	    x = noise(xoff) * width;
-
-			if (x > prevX) {
-				x -= 28;
-			} else {
-				x += 28;
-			}
-			
 	    y = prevY + (maxy - (prevY + 64));
-
 		} else {
-	    x = noise(xoff) * width;
-	
-	
-			if (x > prevX) {
-				x -= 28;
-			} else {
-				x += 28;
-			}
-			
-			if (prevY - 50 > maxy) {
-				stroke(255);
-			}
-			
 	    y = prevY - random(12);
 	  }
+	
+		if (prevY - 2 > maxy) {
+			stroke(255); // alert white
+		}
 	
 	  x = constrain(x, 0, width);
 	  y = constrain(y, 0, height);
