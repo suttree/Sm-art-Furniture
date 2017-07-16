@@ -1,0 +1,51 @@
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="sf">
+
+float theta;
+int frms = 180;
+ 
+void setup() {
+  size(540, 540, P2D);
+  smooth(8);
+}
+ 
+void draw() {
+  background(243, 134, 48);
+  // moving the axis to the center
+  translate(width/2, height/2);
+  // rotating around the center of the image
+  rotate(theta);
+  // calculate the time, the y-location of both arcs and their radii
+  float t = map(sin(theta), -1, 1, 0.15, 0.85);
+  float y0 = -200 + 200 * t;
+  float r0 = 400 * t;
+  float y1 = 200 - 200 * (1 - t);
+  float r1 = 400 * (1 - t);
+  //background circle  
+  fill(238);
+  noStroke();
+  ellipse(0, 0, 400, 400);
+  // black part  
+  fill(34);
+  arc(0, 0, 400, 400, PI / 2, TWO_PI-PI / 2);
+  arc(0, y0, r0, r0, -PI / 2, PI / 2);
+  // white part
+  pushMatrix();
+  translate(0, 400-r1);
+  rotate(PI);
+  fill(238);
+  arc(0, y1, r1, r1, -PI / 2, PI / 2);
+  popMatrix();
+  // white dot in black part
+  fill(238);
+  ellipse(0, y0, r0 * 0.1, r0 * 0.1);
+  // black dot in white part
+  fill(34);
+  ellipse(0, y1, r1 * 0.1, r1 * 0.1);
+  // calculating the angle of rotation
+  theta += TWO_PI/frms;
+  //if (frameCount<frms) saveFrame("image-###.gif");
+}
+</script>
+
+<canvas id="sf"></canvas>

@@ -1,0 +1,98 @@
+
+<script src="script/processing.min.js"></script> 
+<script type="text/processing" data-processing-target="sf">
+// by josÃ© henrique padovani
+
+
+//float frat = random(0.5,2);
+inf fr=20;
+
+PFont fontA = loadFont("Arial");
+textFont(fontA, 20);
+int z=99;
+float a,b,c,d;
+float e,f,g,i;
+float w=window.innerWidth;
+float h=window.innerHeight;
+float x1,y1,l1,x2,y2,l2,x3,y3,l3,x4,y4,l4;
+float linksize=13;
+string thislink;
+float trampp = 15;
+float trampn = -15;
+float curvep = 14;
+float curven = -14;
+int m=0;
+float colorp = round(random(4))*64;
+void setup(){
+size(w, h);
+colorMode(HSB,255);
+background(255);
+a=random(w);
+b=random(h);
+e=a;
+f=b;
+//fill(255,100);
+//rect(w-50,0,50,900);
+
+pushMatrix();
+fill(100,0,100,80);
+translate(w-35,10);
+rotate(PI/2);
+text("josÃ© henrique padovani", 0, 0);
+textFont(fontA, 15);
+//text("compositor/composer", 215, 0);
+popMatrix();
+pushMatrix();
+fill(100,0,70,80);
+translate(w-525,h-6);
+textFont(fontA, 11);
+text("alguns direitos reservados / some rights reserved >> http://creativecommons.org/licenses/by-nc-sa/3.0/", 0, 0);
+popMatrix();
+pushMatrix();
+fill(100,0,70,80);
+translate(5,h-6);
+textFont(fontA, 11);
+text("recarregue a pÃ¡gina para limpar / reload the page to clean it", 0, 0);
+popMatrix();
+//frameRate(30);
+}
+
+void draw(){
+fr=fr+random(-3.0,3.0);
+if(fr<20){
+fr=20};
+if(fr>50){
+fr=50};
+frameRate(fr);
+g++;
+trampp = random(1.0,15);
+trampn = -trampp;
+curvep = random(-13,13);
+curven = -curvep;
+fill(255,0);
+c=a+random(trampn,trampp);
+d=b+random(trampn,trampp);
+if(g>900){
+g=0;}
+if(g==0||g==150||g==151||g==252||g==700||g==701){
+c=random(w);
+d=random(h);
+curvep = random(w*0.05,w*0.07)*(float(round(random(0,1)))*2-1);
+curven = random(w*0.05,w*0.07)*(float(round(random(0,1)))*2-1);
+}
+strokeWeight(random(0.2,1.4));
+stroke((colorp+random(64.0))%255,random(170.0)+10,random(170.0)+30,random(150.0)+50);
+bezier(a,b,a+random(curven,curvep),b+random(curven,curvep),c+random(curven,curvep),d+random(curven,curvep),c,d);
+if(c>w){
+a=(c-w);}else if (c<0){
+a=w-abs(c);}else{
+a=c;}
+if(d>(h-4)){
+b=(d-h);
+}else if(d<0){
+b=h-4-abs(d);}else{
+b=d;}
+}
+</script>
+
+<canvas id="sf"></canvas>

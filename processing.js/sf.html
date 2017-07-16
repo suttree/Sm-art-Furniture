@@ -1,0 +1,30 @@
+<html>
+  <head>
+		<script src="script/p5/p5.js"></script> 
+		<script type="text/javascript">
+			function getUrlVars() {
+				var vars = {};
+				var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
+				function(m,key,value) {
+					vars[key] = value;
+				});
+				return vars;
+			}
+				
+			function loadSketch() {
+				var script = document.createElement('script');
+				script.src = '/script/p5/p5.js';
+				document.write(script.outerHTML);
+
+				var s = getUrlVars()["s"];
+				var script = document.createElement('script');
+				script.src = '/script/sf/' + s;
+				document.write(script.outerHTML);
+			}
+
+				window.onload = loadSketch;
+		</script>
+  </head>
+  <body>
+  </body>
+</html>
